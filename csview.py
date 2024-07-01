@@ -4,10 +4,22 @@ import tkinter as tk
 import csv
 import sys
 
+from tkinter.filedialog import askopenfilename
 from tksheet import Sheet
+from themes import theme_light_orange
 
 # Get the file name from the command line arguments
-if len(sys.argv) == 2:
+if len(sys.argv) == 1:
+    filename = askopenfilename(
+        defaultextension="*.csv",
+        filetypes=[
+            ("CSV files", "*.csv"),
+            ("TSV Files", "*.tsv"),
+            ("Data Files", "*.dat"),
+            ("All Files", "*.*"),
+        ],
+    )
+elif len(sys.argv) == 2:
     filename = sys.argv[1]
 else:
     print("Usage: csview <filename>")
@@ -22,15 +34,14 @@ with open(filename, "r") as f:
     reader = csv.reader(f)
     data = list(reader)
 
-# Create a Tkinter frame to hold the table
-# frame = tk.Frame(window, relief="flat")
-# frame.pack(expand=tk.YES, fill=tk.BOTH)
-
 # Create Tk Sheet for data display
-sheet = Sheet(window, width=640, height=480, theme="light green")
+sheet = Sheet(window, width=640, height=480)
+sheet.set_options(**theme_light_orange, rounded_boxes=False)
 sheet.yscroll.grid(row=0, column=2, rowspan=2, sticky="nswe")
 sheet.enable_bindings(
     "single_select",
+    "drag_select",
+    "select_all",
     "column_select",
     "row_select",
     "move_columns",
@@ -40,7 +51,6 @@ sheet.enable_bindings(
     "row_width_resize",
     "row_height_resize",
     "arrowkeys",
-    "rc_select",
     "right_click_popup_menu",
     "copy",
 )
