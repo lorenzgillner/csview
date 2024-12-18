@@ -3,6 +3,7 @@
 import tkinter as tk
 import csv
 import sys
+import os
 
 from tkinter.filedialog import askopenfilename
 from tksheet import Sheet
@@ -11,6 +12,7 @@ from themes import theme_light_orange
 # Get the file name from the command line arguments
 if len(sys.argv) == 1:
     filename = askopenfilename(
+        initialdir=os.path.expanduser('~'),
         defaultextension="*.csv",
         filetypes=[
             ("CSV files", "*.csv"),
@@ -25,9 +27,14 @@ else:
     print("Usage: csview <filename>")
     sys.exit()
 
+# One last fallback
+if filename == "":
+    print("No file selected. Exiting.")
+    sys.exit()
+
 # Create a Tkinter window
 window = tk.Tk()
-window.title("CSView: {0}".format(filename))
+window.title("CSView: {0}".format(os.path.basename(filename)))
 
 # Open the CSV file and read its contents
 with open(filename, "r") as f:
