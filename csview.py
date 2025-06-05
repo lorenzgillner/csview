@@ -28,7 +28,7 @@ else:
     sys.exit()
 
 # One last fallback
-if filename == "":
+if filename in ("", (), []):
     print("No file selected. Exiting.")
     sys.exit()
 
